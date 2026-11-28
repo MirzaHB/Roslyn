@@ -41,6 +41,21 @@ public static class Ex3_CallGraph
 {
     public static void Run()
     {
-        throw new NotImplementedException();
+        var compilation = Lab.CreateSampleCompilation();
+        foreach (var tree in compilation.SyntaxTrees)
+        {
+            var root = tree.GetRoot();
+            var SemanticModel = compilation.GetSemanticModel(tree);
+            foreach (var methodNode in root.DescendantNodes().OfType<MethodDeclarationSyntax>())
+            {
+                var methodSymbol = SemanticModel.GetDeclaredSymbol(methodNode);
+                foreach (var invocation in methodNode.DescendantNodes().OfType<InvocationExpressionSyntax>())
+                {
+                    var invocationInfo = SemanticModel.GetSymbolInfo(invocation);
+                    if (invocationInfo.Symbol != null && methodSymbol != null)
+                        Console.WriteLine($"{methodSymbol.ContainingType.Name}.{methodSymbol.Name} -> {invocationInfo.Symbol.ContainingType.Name}.{invocationInfo.Symbol.Name}");
+                }
+            }
+        }
     }
 }
