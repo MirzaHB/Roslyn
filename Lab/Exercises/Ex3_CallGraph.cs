@@ -52,7 +52,7 @@ public static class Ex3_CallGraph
                 foreach (var invocation in methodNode.DescendantNodes().OfType<InvocationExpressionSyntax>())
                 {
                     var invocationInfo = SemanticModel.GetSymbolInfo(invocation);
-                    if (invocationInfo.Symbol != null && methodSymbol != null)
+                    if (invocationInfo.Symbol != null && invocationInfo.Symbol.DeclaringSyntaxReferences.Any() && methodSymbol != null)
                         Console.WriteLine($"{methodSymbol.ContainingType.Name}.{methodSymbol.Name} -> {invocationInfo.Symbol.ContainingType.Name}.{invocationInfo.Symbol.Name}");
                 }
             }
